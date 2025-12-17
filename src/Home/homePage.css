@@ -1,0 +1,147 @@
+/* hero.css */
+:root {
+    --maxw: 1200px;
+  }
+  
+  * { box-sizing: border-box; }
+  
+  .hero {
+    position: relative;
+    min-height: 100vh;
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+    background-image: var(--bg);           /* set via inline style */
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    color: #111;
+  }
+  
+  /* dark/blur overlay */
+  .hero__overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(0,0,0,0.35);
+    pointer-events: none;
+  }
+  
+  /* top bar similar to screenshot */
+  .topbar {
+    position: relative;
+    z-index: 2;
+    height: 56px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 0 14px;
+    color: #fff;
+    background-color: black;
+    justify-content: space-between;
+  }
+  .menu-btn, .cart-btn {
+    background: transparent;
+    border: 0;
+    font-size: 20px;
+    color: inherit;
+    cursor: pointer;
+  }
+  .logo-dot {
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    background: #fff;
+    margin-right: auto;
+  }
+  
+  /* center content card */
+  .hero__content {
+    position: relative;
+    z-index: 2;
+    width: min(92vw, var(--maxw));
+    margin: 0 auto;
+    align-self: center;
+  
+    background: rgba(255,255,255,0.82);     /* frosted panel like screenshot */
+    -webkit-backdrop-filter: blur(6px);
+    backdrop-filter: blur(6px);
+    border-radius: 14px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.18);
+    padding: clamp(16px, 3vw, 32px);
+  }
+  
+  .hero__title {
+    margin: 0 0 6px;
+    font-size: clamp(20px, 3.8vw, 36px);
+    font-weight: 600;
+    color: #111;
+    text-align: left;
+  }
+  
+  .hero__subtitle {
+    margin: 0;
+    line-height: 1.5;
+    font-size: clamp(14px, 2.4vw, 18px);
+    color: #222;
+  }
+  
+  .hero__cta {
+    margin-top: 16px;
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  .btn {
+    display: inline-block;
+    padding: 10px 16px;
+    border-radius: 999px;
+    background: #007aff;    /* iOS blue */
+    color: #fff;
+    text-decoration: none;
+    font-weight: 600;
+  }
+  .link {
+    align-self: center;
+    color: #007aff;
+    text-decoration: none;
+  }
+  
+  /* footer links like screenshot */
+  .hero__footer {
+    position: relative;
+    z-index: 2;
+    width: min(92vw, var(--maxw));
+    margin: 12px auto 20px;
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  .hero__footer a {
+    color: #fff;
+    opacity: 0.95;
+    text-decoration: none;
+    font-size: 13px;
+  }
+  
+  /* ===== Responsive tweaks ===== */
+  
+  /* small phones */
+  @media (max-width: 420px) {
+    .topbar { height: 50px; }
+    .hero__content { border-radius: 10px; padding: 14px; }
+    .hero__footer { justify-content: center; text-align: center; }
+  }
+  
+  /* tablets / small laptops */
+  @media (min-width: 768px) {
+    .hero__content { padding: 24px 28px; }
+  }
+  
+  /* big desktops: add subtle gradient at bottom */
+  @media (min-width: 1200px) {
+    .hero__overlay {
+      background:
+        linear-gradient(to bottom, rgba(0,0,0,0.25), rgba(0,0,0,0.55) 85%),
+        rgba(0,0,0,0.25);
+    }
+  }
+  
