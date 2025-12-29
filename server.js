@@ -22,70 +22,38 @@ app.post("/api/phone", (req, res) => {
   res.json({ ok: true, phone: storedPhone });
 });
 
-// Open EXE endpoint - Windows par PowerShell thi, Linux par wine/alternative
+// Open EXE endpoint - Ubuntu VPS માટે સુધારેલો કોડ
 app.post("/api/open-ps", (req, res) => {
-  console.log('open-ps endpoint called');
   const { exec } = require("child_process");
   const path = require("path");
   const os = require("os");
   
-  try {
-    const exePath = path.join(__dirname, "exe/exeProject.exe");
-    const platform = os.platform();
-    
-    let command;
-    
-    if (platform === "win32") {
-      // Windows: PowerShell use karo
-      command = `cmd.exe /c start "" powershell.exe -NoExit -WindowStyle Hidden -Command "Start-Process '${exePath}' -Verb RunAs"`;
-      
-      exec(command, {
-        detached: true,
-        windowsHide: true
-      }, (error, stdout, stderr) => {
-        if (error) {
-          console.error("Error:", error);
-          res.status(500).json({ ok: false, error: error.message });
-          return;
-        }
-        if (stdout) console.log("Output:", stdout);
-        if (stderr) console.error("Stderr:", stderr);
-        res.json({ ok: true, message: "EXE execution started on Windows" });
-      });
-    } else if (platform === "linux") {
-      // Linux: Wine use karo (agar install che) ya download link return karo
-      // Note: Wine install kariye: sudo apt-get install wine
-      const wineCommand = `wine "${exePath}"`;
-      
-      exec(wineCommand, {
-        detached: true
-      }, (error, stdout, stderr) => {
-        if (error) {
-          console.error("Wine error (maybe not installed):", error);
-          // Fallback: exe file path return karo for download
-          res.json({ 
-            ok: false, 
-            message: "Wine not installed. EXE file available for download.",
-            downloadUrl: `/exe/exeProject.exe`,
-            error: "Install Wine: sudo apt-get install wine"
-          });
-          return;
-        }
-        if (stdout) console.log("Output:", stdout);
-        if (stderr) console.error("Stderr:", stderr);
-        res.json({ ok: true, message: "EXE execution started via Wine on Linux" });
-      });
-    } else {
-      // macOS ya other platforms
-      res.json({ 
-        ok: false, 
-        message: "Platform not supported for direct execution",
-        downloadUrl: `/exe/exeProject.exe`
-      });
-    }
-  } catch (error) {
-    console.error("Error executing EXE:", error);
-    res.status(500).json({ ok: false, error: error.message });
+  // ફાઈલનો સાચો પાથ (ખાતરી કરો કે 'exe' ફોલ્ડર અને ફાઈલ ત્યાં છે)
+  const exePath = path.join(__dirname, "public", "exe", "exeProject.exe");
+  const platform = os.platform();
+
+  console.log(`Executing on platform: ${platform}`);
+
+  if (platform === "linux") {
+    // Ubuntu પર EXE ચલાવવા માટે Wine નો ઉપયોગ
+    // 'xvfb-run' નો ઉપયોગ જો તમારી EXE ને GUI (વિન્ડો) જોઈતી હોય
+    const command = `wine "${exePath}"`;
+
+    exec(command, (error, stdout, stderr) => {
+      if (error) {
+        console.error("Wine execution error:", error);
+        return res.status(500).json({ ok: false, error: error.message });
+      }
+      console.log("Output:", stdout);
+      res.json({ ok: true, message: "EXE started via Wine on Ubuntu" });
+    });
+  } else if (platform === "win32") {
+    // આ કોડ ત્યારે જ ચાલશે જો તમે લોકલ વિન્ડોઝ પર ટેસ્ટ કરતા હોવ
+    const command = `start "" "${exePath}"`;
+    exec(command, (err) => {
+      if (err) return res.status(500).json({ ok: false, error: err.message });
+      res.json({ ok: true, message: "Started on Windows" });
+    });
   }
 });
 
