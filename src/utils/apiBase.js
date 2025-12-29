@@ -1,6 +1,6 @@
 // src/utils/apiBase.js
 export function getApiBase() {
-  // Production ma environment variable use karo (Ubuntu VPS backend URL)
+  // Production ma environment variable use karo (Railway/Render backend URL)
   if (process.env.REACT_APP_API_URL) {
     return process.env.REACT_APP_API_URL;
   }
@@ -12,17 +12,7 @@ export function getApiBase() {
     return `${protocol}//${hostname}:4000`;
   }
 
-  // Production (Hostinger) → Backend URL (Ubuntu VPS)
-  // Note: Hostinger par backend run nathi thatu, etle separate Ubuntu VPS par host kari javu joiye
-  // Default: same domain par port 4000 (agar Nginx reverse proxy use kariye to)
-  // ya explicitly VPS IP/domain set karo environment variable ma
-  
-  // Example: agar Nginx reverse proxy use kariye to:
-  // return `${protocol}//${hostname}`;
-  
-  // ya VPS IP directly:
-  // return `http://your-vps-ip:4000`;
-  
-  // Fallback: environment variable ma set karo REACT_APP_API_URL
-  return process.env.REACT_APP_API_URL || `${protocol}//${hostname}:4000`;
+  // Production (Netlify) → Backend URL (Railway/Render)
+  // Note: Netlify par backend run nathi thatu, etle separate service par host kari javu joiye
+  return process.env.REACT_APP_API_URL || `${protocol}//${hostname}/.netlify/functions`;
 }

